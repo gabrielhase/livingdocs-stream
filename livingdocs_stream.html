@@ -1,0 +1,38 @@
+<head>
+  <title>livingdocs-stream</title>
+  <link rel="stylesheet" href="http://livingdocs-beta.io/designs/timeline/css/fixed_width_fluid/all.css">
+</head>
+<!--
+<body>
+  {{> article}}
+</body> -->
+
+<template name="ArticleStream">
+  <h3>All Articles</h3>
+  <ul>
+  {{#each articles}}
+    {{> ArticleTeaser}}
+  {{/each}}
+  </ul>
+</template>
+
+<template name="ArticleTeaser">
+  <li>
+    <a href="/articles/{{document_id}}">Article {{document_id}}</a>
+  </li>
+</template>
+
+<template name="ArticlePage">
+  {{> article}}
+</template>
+
+<template name="article">
+  <div class="funky-wrapper doc-section">
+    {{{article}}}
+  </div>
+</template>
+
+<template name="AppLayout">
+  <!-- Here comes them app-wide layout shizzle -->
+  {{> yield}}
+</template>
