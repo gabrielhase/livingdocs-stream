@@ -1,11 +1,6 @@
 <head>
   <title>livingdocs-stream</title>
-  <link rel="stylesheet" href="http://livingdocs-beta.io/designs/timeline/css/fixed_width_fluid/all.css">
 </head>
-<!--
-<body>
-  {{> article}}
-</body> -->
 
 <template name="ArticleStream">
   <h3>All Articles</h3>
@@ -17,9 +12,13 @@
 </template>
 
 <template name="ArticleTeaser">
-  <li>
-    <a href="/articles/{{document_id}}">Article {{document_id}}</a>
-  </li>
+  <a href="/articles/{{document_id}}">
+    <li class="teaser" style="background-image: url({{meta.teaser_image}})">
+      <div class="table">
+        bla
+      </div>
+    </li>
+  </a>
 </template>
 
 <template name="ArticlePage">
@@ -27,9 +26,8 @@
 </template>
 
 <template name="article">
-  <div class="funky-wrapper doc-section">
-    {{{article}}}
-  </div>
+  <iframe class="article-wrapper">
+  </iframe>
 </template>
 
 <template name="AppLayout">

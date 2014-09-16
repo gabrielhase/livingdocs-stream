@@ -1,1 +1,8 @@
 /* CSS declarations go here */
+html, body {
+  height: 100%;
+}
+.article-wrapper {
+  width: 100%;
+  height: 100%;
+}
