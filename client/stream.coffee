@@ -1,17 +1,40 @@
-renderInIframe = ->
-  iframe = $('iframe')[0].contentDocument
-  $css = $('<link rel="stylesheet" href="http://livingdocs-beta.io/designs/timeline/css/fixed_width_fluid/all.css">')
-  $(iframe.head).append($css)
-  $(iframe.body).append(Session.get("articleHtml"))
+createiFrameTag = ({ element, width, height }) ->
+  iframe = element.ownerDocument.createElement('iframe')
+  iframe.src = 'about:blank'
+  iframe.setAttribute('width', width)
+  iframe.setAttribute('height', height)
+  iframe
+
+
+tryRenderIFrame = (view) ->
+  if Session.get('articleHtml')
+    iframe = createiFrameTag
+      element: view.firstNode
+      width: '100%'
+      height: '100%'
+    iframe.onload = ->
+      iframe.contentDocument.body.style.cssText = (
+        'margin: 0px;' +
+        'padding: 0px;' +
+        'height: 100%;' +
+        'width: 100%;'
+      )
+      $css = $('<link rel="stylesheet" href="http://livingdocs-beta.io/designs/timeline/css/fixed_width_fluid/all.css">')
+      $(iframe.contentDocument.head).append($css)
+      $(iframe.contentDocument.body).append(Session.get('articleHtml'))
+
+    $(view.firstNode).append(iframe)
+    Session.set('articleHtml', undefined)
+  else
+    setTimeout ->
+      tryRenderIFrame(view)
+    , 30
 
 
 Template.ArticleStream.articles = ->
   Session.get("articleList")
 
 
-# Render article in an iframe so you don't have css conflicts
 Template.article.rendered = ->
-  # ugly hack to prevent timing issue
-  setTimeout ->
-    renderInIframe()
-  , 100
+  tryRenderIFrame(this)
+
