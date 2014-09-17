@@ -6,13 +6,25 @@ createiFrameTag = ({ element, width, height }) ->
   iframe
 
 
+# Poll for readyState of contentDocument
+# -> cross-browser solution (onload does not work on mobile browsers)
+waitForIFrameLoad = (iframe, cb) ->
+  if iframe.contentDocument?.readyState == 'complete'
+    cb()
+  else
+    setTimeout ->
+      waitForIFrameLoad(iframe, cb)
+    , 30
+
+
 tryRenderIFrame = (view) ->
   if Session.get('articleHtml')
     iframe = createiFrameTag
       element: view.firstNode
       width: '100%'
       height: '100%'
-    iframe.onload = ->
+
+    waitForIFrameLoad iframe, ->
       iframe.contentDocument.body.style.cssText = (
         'margin: 0px;' +
         'padding: 0px;' +
@@ -22,9 +34,10 @@ tryRenderIFrame = (view) ->
       $css = $('<link rel="stylesheet" href="http://livingdocs-beta.io/designs/timeline/css/fixed_width_fluid/all.css">')
       $(iframe.contentDocument.head).append($css)
       $(iframe.contentDocument.body).append(Session.get('articleHtml'))
-
+      # Reset articleHtml session variable
+      Session.set('articleHtml', undefined)
+    # Append IFrame to the DOM
     $(view.firstNode).append(iframe)
-    Session.set('articleHtml', undefined)
   else
     setTimeout ->
       tryRenderIFrame(view)
