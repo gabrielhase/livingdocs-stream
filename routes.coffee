@@ -15,4 +15,3 @@ Router.map ->
     data: ->
       Meteor.call "article", @params.id, (err, res) ->
         Session.set("articleHtml", res.data?.publication?.html)
-

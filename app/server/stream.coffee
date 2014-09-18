@@ -1,5 +1,8 @@
 Future = Npm.require('fibers/future')
 
+#url = "http://localhost:9090/publications"
+
+
 mockMeta =
   teaser_image: 'http://app.resrc.it/https://livingdocs-images-dev.s3.amazonaws.com/6a164594-7f6c-43fa-8977-1d1ed64a0120'
   title: 'Travelling to wonderland'
@@ -12,8 +15,10 @@ mockMeta =
 Meteor.methods
 
   article: (id) ->
+    #console.log "GETTING ARTICLE FROM API: #{Meteor.settings.apiUrl}"
     fut = new Future()
     handler = Meteor.bindEnvironment (err, res) ->
+      #console.log res
       return fut.throw(new Error("Request error: #{err}")) if err
       fut.return(res)
     , (exception) ->
