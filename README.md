@@ -21,7 +21,22 @@ You also need a running local version of the [livingdocs-api](https://github.com
 
 ## Running
 
+The simplest way to run it is:
+
 ```
-meteor --settings settings.json
+./start
+```
+Your server will then run at `localhost:3000`.
+
+You also have the option to choose different environments with the `--env` parameter. *Currently, there is no API on either staging or production that would work with this app, so don't use these environments yet.*
+
+You can run the app on the IOS simulator with:
+```
+./start --env ios
 ```
 
+You can also start the app for development on XCode (and running on a native device) with:
+```
+./start --env mobiledev
+```
+*This is currently broken though, I am guessing on a load order problem*
