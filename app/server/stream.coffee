@@ -34,7 +34,7 @@ deduceTeaserImageFromData = (content) ->
       return snippet.content.image
 
 
-constructImageUrl = (original) ->
+constructImageUrl = (original='') ->
   imageId = original.split('amazonaws.com/')[1]
   if imageId
     return "http://suitart.gallery/images/bkXv1l4RQ/s:1000x1000/#{imageId}"
