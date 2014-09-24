@@ -52,7 +52,11 @@ constructTeasers = (publications) ->
     teaserImage ?= deduceTeaserImageFromData(publication.data.content)
     # the link target
     articleId = publication.document_id
-    teasers.push {title, constructImageUrl(teaserImage), articleId}
+    teasers.push
+      title: title
+      teaserImage: constructImageUrl(teaserImage)
+      articleId: articleId
+
     title = teaserImage = articleId = undefined
   teasers
 
