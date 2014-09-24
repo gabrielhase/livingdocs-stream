@@ -26,7 +26,6 @@ tryRenderIFrame = (view) ->
 
     waitForIFrameLoad iframe, ->
       iframe.contentDocument.body.style.cssText = (
-        'margin: 0px;' +
         'padding: 0px;' +
         'height: 100%;' +
         'width: 100%;'

@@ -34,6 +34,13 @@ deduceTeaserImageFromData = (content) ->
       return snippet.content.image
 
 
+constructImageUrl = (original) ->
+  imageId = original.split('amazonaws.com/')[1]
+  if imageId
+    return "http://suitart.gallery/images/bkXv1l4RQ/s:1000x1000/#{imageId}"
+  original
+
+
 constructTeasers = (publications) ->
   teasers = []
   for publication in publications
@@ -45,7 +52,7 @@ constructTeasers = (publications) ->
     teaserImage ?= deduceTeaserImageFromData(publication.data.content)
     # the link target
     articleId = publication.document_id
-    teasers.push {title, teaserImage, articleId}
+    teasers.push {title, constructImageUrl(teaserImage), articleId}
     title = teaserImage = articleId = undefined
   teasers
 
