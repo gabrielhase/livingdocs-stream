@@ -7,8 +7,8 @@ Router.map ->
     path: '/'
     template: 'ArticleStream'
     data: ->
-      Meteor.call "articles", (err, res) ->
-        Session.set("articleList", res.data.publications)
+      Meteor.call "articles", (err, teasers) ->
+        Session.set("articleList", teasers)
   @route 'article',
     path: '/articles/:id'
     template: 'ArticlePage'

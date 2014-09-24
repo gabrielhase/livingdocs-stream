@@ -12,6 +12,44 @@ mockMeta =
 # - http://stackoverflow.com/questions/24743402/how-to-get-an-async-data-in-a-function-with-meteor
 # - https://www.eventedmind.com/feed/meteor-what-is-meteor-bindenvironment
 
+deduceTitleFromData = (content) ->
+  for snippet in content
+    if snippet.identifier == 'timeline.hero' && snippet.content.title?
+      return snippet.content.title
+    else if snippet.identifier == 'timeline.head' && snippet.content.title?
+      return snippet.content.title
+    else if snippet.identifier == 'timeline.title' && snippet.content.title?
+      return snippet.content.title
+
+
+deduceTeaserImageFromData = (content) ->
+  for snippet in content
+    if snippet.identifier == 'timeline.hero' && snippet.content.image?
+      return snippet.content.image
+    else if snippet.identifier == 'timeline.fullsize' && snippet.content.image?
+      return snippet.content.image
+    else if snippet.identifier == 'timeline.normal' && snippet.content.image?
+      return snippet.content.image
+    else if snippet.identifier == 'timeline.peephole' && snippet.content.image?
+      return snippet.content.image
+
+
+constructTeasers = (publications) ->
+  teasers = []
+  for publication in publications
+    # the title
+    title = publication.metadata.title if publication.metadata?.title
+    title ?= deduceTitleFromData(publication.data.content)
+    # the teaser image
+    teaserImage = publication.metadata.teaser_image if publication.metadata?.teaser_image
+    teaserImage ?= deduceTeaserImageFromData(publication.data.content)
+    # the link target
+    articleId = publication.document_id
+    teasers.push {title, teaserImage, articleId}
+    title = teaserImage = articleId = undefined
+  teasers
+
+
 Meteor.methods
 
   article: (id) ->
@@ -33,8 +71,8 @@ Meteor.methods
     fut = new Future()
     handler = Meteor.bindEnvironment (err, res) ->
       return fut.throw(new Error("Request error: #{err}")) if err
-      publication.meta = mockMeta for publication in res.data.publications
-      fut.return(res)
+      teasers = constructTeasers(res.data.publications)
+      fut.return(teasers)
     , (exception) ->
       fut.throw(new Error("Exception while getting documents"))
 
