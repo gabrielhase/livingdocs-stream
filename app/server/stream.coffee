@@ -14,24 +14,14 @@ mockMeta =
 
 deduceTitleFromData = (content) ->
   for snippet in content
-    if snippet.identifier == 'timeline.hero' && snippet.content.title?
-      return snippet.content.title
-    else if snippet.identifier == 'timeline.head' && snippet.content.title?
-      return snippet.content.title
-    else if snippet.identifier == 'timeline.title' && snippet.content.title?
-      return snippet.content.title
+    for type in ['hero', 'head', 'title']
+      return snippet.content.title if snippet.identifier == "timeline.#{type}" && snippet.content.title?
 
 
 deduceTeaserImageFromData = (content) ->
   for snippet in content
-    if snippet.identifier == 'timeline.hero' && snippet.content.image?
-      return snippet.content.image
-    else if snippet.identifier == 'timeline.fullsize' && snippet.content.image?
-      return snippet.content.image
-    else if snippet.identifier == 'timeline.normal' && snippet.content.image?
-      return snippet.content.image
-    else if snippet.identifier == 'timeline.peephole' && snippet.content.image?
-      return snippet.content.image
+    for type in ['hero', 'fullsize', 'normal', 'peephole']
+      return snippet.content.image if snippet.identifier == "timeline.#{type}" && snippet.content.image?
 
 
 constructImageUrl = (original='') ->
@@ -42,23 +32,11 @@ constructImageUrl = (original='') ->
 
 
 constructTeasers = (publications) ->
-  teasers = []
-  for publication in publications
-    # the title
-    title = publication.metadata.title if publication.metadata?.title
-    title ?= deduceTitleFromData(publication.data.content)
-    # the teaser image
-    teaserImage = publication.metadata.teaser_image if publication.metadata?.teaser_image
-    teaserImage ?= deduceTeaserImageFromData(publication.data.content)
-    # the link target
-    articleId = publication.document_id
-    teasers.push
-      title: title
-      teaserImage: constructImageUrl(teaserImage)
-      articleId: articleId
+  for art in publications
+    title: art.metadata?.title || exports.deduceTitleFromData(art.data.content)
+    teaserImage: exports.constructImageUrl(art.metadata?.teaser_image || exports.deduceTeaserImageFromData(art.data.content))
+    articleId: art.slug || art.document_id
 
-    title = teaserImage = articleId = undefined
-  teasers
 
 
 Meteor.methods
