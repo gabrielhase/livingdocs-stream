@@ -24,9 +24,8 @@ deduceTeaserImageFromData = (content) ->
       return snippet.content.image if snippet.identifier == "timeline.#{type}" && snippet.content.image?
 
 
-constructImageUrl = (original='') ->
-  imageId = original.split('amazonaws.com/')[1]
-  if imageId
+constructImageUrl = (original) ->
+  if imageId = (original||'').split('livingdocs-images-dev.s3.amazonaws.com/')[1]
     return "http://suitart.gallery/images/bkXv1l4RQ/s:1000x1000/#{imageId}"
   original
 
