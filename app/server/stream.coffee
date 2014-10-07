@@ -1,27 +1,59 @@
 Future = Npm.require('fibers/future')
 
-#url = "http://localhost:9090/publications"
+designMap =
+  timeline:
+    titles: [
+      identifier: 'hero'
+      contentField: 'title'
+    ,
+      identifier: 'head'
+      contentField: 'title'
+    ,
+      identifier: 'title'
+      contentField: 'title'
+    ]
+    images: [
+      identifier: 'hero'
+      contentField: 'image'
+    ,
+      identifier: 'fullsize'
+      contentField: 'image'
+    ,
+      identifier: 'normal'
+      contentField: 'image'
+    ,
+      identifier: 'peephole'
+      contentField: 'image'
+    ]
+  morpheus:
+    titles: [
+      identifier: 'title'
+      contentField: 'title'
+    ,
+      identifier: 'subtitle'
+      contentField: 'title'
+    ]
+    images: [
+      identifier: 'image'
+      contentField: 'image'
+    ]
 
-
-mockMeta =
-  teaser_image: 'http://app.resrc.it/https://livingdocs-images-dev.s3.amazonaws.com/6a164594-7f6c-43fa-8977-1d1ed64a0120'
-  title: 'Travelling to wonderland'
-  caption: 'Have you ever wanted to follow in the steps of ...'
 
 # Handling of async code:
 # - http://stackoverflow.com/questions/24743402/how-to-get-an-async-data-in-a-function-with-meteor
 # - https://www.eventedmind.com/feed/meteor-what-is-meteor-bindenvironment
 
-deduceTitleFromData = (content) ->
+deduceTitleFromData = (content, designName) ->
   for snippet in content
-    for type in ['hero', 'head', 'title']
-      return snippet.content.title if snippet.identifier == "timeline.#{type}" && snippet.content.title?
+    for target in designMap[designName].titles
+      if snippet.identifier == "#{designName}.#{target.identifier}" && snippet.content[target.contentField]?
+        return snippet.content[target.contentField]
 
 
-deduceTeaserImageFromData = (content) ->
+deduceTeaserImageFromData = (content, designName) ->
   for snippet in content
-    for type in ['hero', 'fullsize', 'normal', 'peephole']
-      return snippet.content.image if snippet.identifier == "timeline.#{type}" && snippet.content.image?
+    for target in designMap[designName].images
+      return snippet.content[target.contentField] if snippet.identifier == "#{designName}.#{target.identifier}" && snippet.content[target.contentField]?
 
 
 constructTeasers = (publications) ->
@@ -29,10 +61,10 @@ constructTeasers = (publications) ->
   for publication in publications
     # the title
     title = publication.metadata.title if publication.metadata?.title
-    title ?= deduceTitleFromData(publication.data.content)
+    title ?= deduceTitleFromData(publication.data.content, publication.data.design.name)
     # the teaser image
     teaserImage = publication.metadata.teaser_image if publication.metadata?.teaser_image
-    teaserImage ?= deduceTeaserImageFromData(publication.data.content)
+    teaserImage ?= deduceTeaserImageFromData(publication.data.content, publication.data.design.name)
     # the link target
     articleId = publication.document_id
     teasers.push {title, teaserImage, articleId}
