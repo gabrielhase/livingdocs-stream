@@ -30,9 +30,19 @@ tryRenderIFrame = (view) ->
         'height: 100%;' +
         'width: 100%;'
       )
-      $css = $('<link rel="stylesheet" href="http://livingdocs-beta.io/designs/timeline/css/fixed_width_fluid/all.css">')
+      $css = $('<link rel="stylesheet" href="/designs/morpheus.css">')
       $(iframe.contentDocument.head).append($css)
-      $(iframe.contentDocument.body).append(Session.get('articleHtml'))
+      html = """
+      <section class="livingdocs-edit-area">
+        <article class="article-full articlebody fullarticle fullarticle__body doc-section">
+          #{Session.get('articleHtml')}
+        </article>
+      </section>
+      """
+      $(iframe.contentDocument.body).append(html)
+      $images = $(iframe.contentDocument.body).find('.resrc')
+      for $image in $images
+        resrc.resrc($image)
       # Reset articleHtml session variable
       Session.set('articleHtml', undefined)
     # Append IFrame to the DOM

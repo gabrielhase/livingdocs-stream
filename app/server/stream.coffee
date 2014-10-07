@@ -78,7 +78,6 @@ Meteor.methods
     #console.log "GETTING ARTICLE FROM API: #{Meteor.settings.apiUrl}"
     fut = new Future()
     handler = Meteor.bindEnvironment (err, res) ->
-      #console.log res
       return fut.throw(new Error("Request error: #{err}")) if err
       fut.return(res)
     , (exception) ->
