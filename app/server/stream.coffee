@@ -14,24 +14,14 @@ mockMeta =
 
 deduceTitleFromData = (content) ->
   for snippet in content
-    if snippet.identifier == 'timeline.hero' && snippet.content.title?
-      return snippet.content.title
-    else if snippet.identifier == 'timeline.head' && snippet.content.title?
-      return snippet.content.title
-    else if snippet.identifier == 'timeline.title' && snippet.content.title?
-      return snippet.content.title
+    for type in ['hero', 'head', 'title']
+      return snippet.content.title if snippet.identifier == "timeline.#{type}" && snippet.content.title?
 
 
 deduceTeaserImageFromData = (content) ->
   for snippet in content
-    if snippet.identifier == 'timeline.hero' && snippet.content.image?
-      return snippet.content.image
-    else if snippet.identifier == 'timeline.fullsize' && snippet.content.image?
-      return snippet.content.image
-    else if snippet.identifier == 'timeline.normal' && snippet.content.image?
-      return snippet.content.image
-    else if snippet.identifier == 'timeline.peephole' && snippet.content.image?
-      return snippet.content.image
+    for type in ['hero', 'fullsize', 'normal', 'peephole']
+      return snippet.content.image if snippet.identifier == "timeline.#{type}" && snippet.content.image?
 
 
 constructTeasers = (publications) ->
