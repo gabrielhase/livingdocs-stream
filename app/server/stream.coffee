@@ -38,6 +38,13 @@ designMap =
       contentField: 'image'
     ]
 
+# Mongo Setup
+Articles = new Mongo.Collection('articles')
+Articles._ensureIndex('document_id', {unique: 1})
+Meteor.publish 'articles', ->
+  Articles.find()
+Meteor.publish 'article', (articleId) ->
+  Articles.find(document_id: articleId)
 
 # Handling of async code:
 # - http://stackoverflow.com/questions/24743402/how-to-get-an-async-data-in-a-function-with-meteor
@@ -72,6 +79,14 @@ constructTeasers = (publications) ->
   teasers
 
 
+# just skip articles that are already there
+saveArticles = (publications) ->
+  for publication in publications
+    Articles.upsert
+      document_id: publication.document_id
+    , publication, {write: true}
+
+
 Meteor.methods
 
   article: (id) ->
@@ -92,6 +107,7 @@ Meteor.methods
     fut = new Future()
     handler = Meteor.bindEnvironment (err, res) ->
       return fut.throw(new Error("Request error: #{err}")) if err
+      saveArticles(res.data.publications)
       teasers = constructTeasers(res.data.publications)
       fut.return(teasers)
     , (exception) ->
