@@ -1,17 +1,22 @@
+_this = @
+
 Router.configure
-  layoutTemplate: 'AppLayout'
   templateNameConverter: 'upperCamelCase'
+
+Router.onBeforeAction('loading')
 
 Router.map ->
   @route 'stream',
+    waitOn: ->
+      Meteor.subscribe('articles')
     path: '/'
     template: 'ArticleStream'
-    data: ->
-      Meteor.call "articles", (err, teasers) ->
-        Session.set("articleList", teasers)
+    controller: 'ArticleController'
+    action: 'index'
   @route 'article',
+    waitOn: ->
+      Meteor.subscribe('articles')
     path: '/articles/:id'
     template: 'ArticlePage'
-    data: ->
-      Meteor.call "article", @params.id, (err, res) ->
-        Session.set("articleHtml", res.data?.publication?.html)
+    controller: 'ArticleController'
+    action: 'show'

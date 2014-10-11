@@ -1,4 +1,4 @@
 {
   "cordova": {},
-  "apiUrl": "http://localhost:9090/publications"
+  "apiUrl": "http://staging.api.livingdocs.io/publications"
 }

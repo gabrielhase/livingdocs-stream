@@ -1,3 +1,5 @@
+_this = @
+
 createiFrameTag = ({ element, width, height }) ->
   iframe = element.ownerDocument.createElement('iframe')
   iframe.src = 'about:blank'
@@ -54,9 +56,14 @@ tryRenderIFrame = (view) ->
 
 
 Template.ArticleStream.articles = ->
-  Session.get("articleList")
+  articles = _this.Articles.find({}).fetch()
+  teaserBuilder = new TeaserBuilder(articles)
+  teasers = teaserBuilder.getTeasers()
+  teasers
 
 
-Template.article.rendered = ->
+Template.Article.rendered = ->
+  article = _this.Articles.findOne({_id: Session.get('articleId')})
+  Session.set('articleHtml', article.html)
   tryRenderIFrame(this)
 
