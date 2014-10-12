@@ -4,11 +4,17 @@ Future = Npm.require('fibers/future')
 # - http://stackoverflow.com/questions/24743402/how-to-get-an-async-data-in-a-function-with-meteor
 # - https://www.eventedmind.com/feed/meteor-what-is-meteor-bindenvironment
 
-# just skip articles that are already there
+
 saveArticles = (publications) ->
   for publication in publications
+    saveArticle(publication)
+
+
+saveArticle = (publication) ->
     d = new Date(publication.created_at)
     publication.created_at = d
+    console.log "Saving:"
+    console.log publication
     Articles.upsert
       document_id: publication.document_id
     , publication, {write: true}
@@ -26,3 +32,12 @@ Meteor.startup ->
   Meteor.http.call("GET", "#{Meteor.settings.apiUrl}/public?fields=html,data,document_id,created_at", handler)
 
   fut.wait()
+
+
+# Server side webhook
+Router.map ->
+  @route 'publication',
+    path: '/publication'
+    where: 'server'
+    action: ->
+      saveArticle(@request.body.publication)
