@@ -1,8 +1,7 @@
 _this = @
 
-@ArticleController = RouteController.extend
+class @ArticleController extends RouteController
 
-  layoutTemplate: 'AppLayout'
 
   show: ->
     if @ready()
@@ -10,7 +9,3 @@ _this = @
       @render('Article')
     else
       console.log 'loading'
-
-
-  index: ->
-    @render('ArticleStream')

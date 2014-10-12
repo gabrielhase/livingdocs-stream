@@ -2,21 +2,19 @@ _this = @
 
 Router.configure
   templateNameConverter: 'upperCamelCase'
+  layoutTemplate: 'AppLayout'
 
 Router.onBeforeAction('loading')
 
 Router.map ->
   @route 'stream',
+    path: '/'
     waitOn: ->
       Meteor.subscribe('articles')
-    path: '/'
     template: 'ArticleStream'
-    controller: 'ArticleController'
-    action: 'index'
   @route 'article',
     waitOn: ->
-      Meteor.subscribe('articles')
+      Meteor.subscribe('article', @params.id)
     path: '/articles/:id'
-    template: 'ArticlePage'
     controller: 'ArticleController'
     action: 'show'

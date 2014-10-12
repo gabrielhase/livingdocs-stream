@@ -23,6 +23,6 @@ Meteor.startup ->
   , (exception) ->
     fut.throw(new Error("Exception while getting documents"))
 
-  Meteor.http.call("GET", "#{Meteor.settings.apiUrl}/public?fields=html,data,document_id", handler)
+  Meteor.http.call("GET", "#{Meteor.settings.apiUrl}/public?fields=html,data,document_id,created_at", handler)
 
   fut.wait()

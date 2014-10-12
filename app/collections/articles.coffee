@@ -4,4 +4,6 @@ if Meteor.isServer
   # Collection setup
   @Articles._ensureIndex('document_id', {unique: 1})
   Meteor.publish 'articles', =>
-    @Articles.find()
+    @Articles.find({}, {sort: {created_at: -1}})
+  Meteor.publish 'article', (id) =>
+    @Articles.find({_id: id})
