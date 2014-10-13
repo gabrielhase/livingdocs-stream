@@ -1,4 +1,4 @@
 {
   "cordova": {},
-  "apiUrl": "http://production.api.livingdocs.io/publications"
+  "apiUrl": "http://production.api.livingdocs.io"
 }

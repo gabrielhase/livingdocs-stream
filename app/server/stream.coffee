@@ -13,8 +13,6 @@ saveArticles = (publications) ->
 saveArticle = (publication) ->
     d = new Date(publication.created_at)
     publication.created_at = d
-    console.log "Saving:"
-    console.log publication
     Articles.upsert
       document_id: publication.document_id
     , publication, {write: true}
@@ -22,14 +20,25 @@ saveArticle = (publication) ->
 
 Meteor.startup ->
   fut = new Future()
+
+  webhookHandler = Meteor.bindEnvironment (err, res) ->
+    return fut.throw(new Error("Request error: #{err}")) if err
+    fut.return('all setup')
+  , (exception) ->
+    fut.throw(new Error("Exception while setting up webhook"))
+
   handler = Meteor.bindEnvironment (err, res) ->
     return fut.throw(new Error("Request error: #{err}")) if err
     saveArticles(res.data.publications)
-    fut.return(res.data.publications)
+    Meteor.http.call("POST",
+      "#{Meteor.settings.apiUrl}/webhooks/publications/subscribe",
+      data:
+        url: 'http://livingdocsstream.pagekite.me/publication'
+    , webhookHandler)
   , (exception) ->
     fut.throw(new Error("Exception while getting documents"))
 
-  Meteor.http.call("GET", "#{Meteor.settings.apiUrl}/public?fields=html,data,document_id,created_at", handler)
+  Meteor.http.call("GET", "#{Meteor.settings.apiUrl}/publications/public?fields=html,data,document_id,created_at", handler)
 
   fut.wait()
 
