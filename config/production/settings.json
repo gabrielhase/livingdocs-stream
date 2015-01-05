@@ -1,4 +1,6 @@
 {
   "cordova": {},
-  "apiUrl": "http://production.api.livingdocs.io"
+  "apiUrl": "http://production.api.livingdocs.io",
+  "url": "http://livingdocs.meteor.com",
+  "space": "mySpace"
 }

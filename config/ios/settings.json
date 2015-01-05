@@ -1,4 +1,6 @@
 {
   "cordova": {},
-  "apiUrl": "http://staging.api.livingdocs.io"
+  "apiUrl": "http://staging.api.livingdocs.io",
+  "url": "http://livingdocsstream.pagekite.me",
+  "space": "7"
 }

@@ -11,11 +11,11 @@ saveArticles = (publications) ->
 
 
 saveArticle = (publication) ->
-    d = new Date(publication.created_at)
-    publication.created_at = d
-    Articles.upsert
-      document_id: publication.document_id
-    , publication, {write: true}
+  d = new Date(publication.created_at)
+  publication.created_at = d
+  Articles.upsert
+    document_id: publication.document_id
+  , publication, {write: true}
 
 
 Meteor.startup ->
@@ -33,12 +33,14 @@ Meteor.startup ->
     Meteor.http.call("POST",
       "#{Meteor.settings.apiUrl}/webhooks/publications/subscribe",
       data:
-        url: 'http://livingdocsstream.pagekite.me/publication'
+        url: "#{Meteor.settings.url}/publication"
+        space_name: Meteor.settings.space
     , webhookHandler)
   , (exception) ->
     fut.throw(new Error("Exception while getting documents"))
 
-  Meteor.http.call("GET", "#{Meteor.settings.apiUrl}/publications/public?fields=html,data,document_id,created_at", handler)
+  url = "#{Meteor.settings.apiUrl}/public/publications?fields=html,data,document_id,created_at&space=#{Meteor.settings.space}"
+  Meteor.http.call("GET", url, handler)
 
   fut.wait()
 

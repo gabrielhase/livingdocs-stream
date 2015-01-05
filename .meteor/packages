@@ -8,5 +8,6 @@ insecure
 coffeescript
 particle4dev:sass
 http
-iron:router
 jquery
+iron:router@1.0.0
+

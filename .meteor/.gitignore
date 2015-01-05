@@ -1,1 +1,7 @@
 local
+.DS_Store
+app/.DS_Store
+app/client/.DS_Store
+app/client/models/.DS_Store
+config/.DS_Store
+public/.DS_Store

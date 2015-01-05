@@ -17,7 +17,7 @@ This code does not adhere to upfront.io code quality standards. We would never u
 curl https://install.meteor.com | /bin/sh
 ```
 
-You also need a running local version of the [livingdocs-api](https://github.com/upfrontIO/livingdocs-api/). Currently, it only works with the branch 'support-delivery'.
+In order to run this locally, you also need a running local version of the [livingdocs-api](https://github.com/upfrontIO/livingdocs-api/).
 
 ## Running
 
@@ -28,7 +28,7 @@ The simplest way to run it is:
 ```
 Your server will then run at `localhost:3000`.
 
-You also have the option to choose different environments with the `--env` parameter. *Currently, there is no API on either staging or production that would work with this app, so don't use these environments yet.*
+You also have the option to choose different environments with the `--env` parameter. *Currently, there is no API on production that would work with this app, so don't use the production environment yet.*
 
 You can run the app on the IOS simulator with:
 ```
@@ -39,4 +39,7 @@ You can also start the app for development on XCode (and running on a native dev
 ```
 ./start --env mobiledev
 ```
-*This is currently broken though, I am guessing on a load order problem*
+
+### URL Setting
+
+The app uses the livingdocs-api webhooks to get notified of new publications in real-time. In order to work, the app needs to know the URL it is working under. The livingdocs-api *does not allow the url to be on localhost* so if you develop locally you need to make sure that you use a local URL mapper, e.g., pagekite. Once you have a mapped URL, enter it in the respective settings file, e.g., development/settings.json`.
