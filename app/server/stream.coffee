@@ -27,20 +27,14 @@ Meteor.startup ->
   , (exception) ->
     fut.throw(new Error("Exception while setting up webhook"))
 
-  handler = Meteor.bindEnvironment (err, res) ->
-    return fut.throw(new Error("Request error: #{err}")) if err
-    saveArticles(res.data.publications)
-    Meteor.http.call("POST",
-      "#{Meteor.settings.apiUrl}/webhooks/publications/subscribe",
-      data:
-        url: "#{Meteor.settings.url}/publication"
-        space_name: Meteor.settings.space
-    , webhookHandler)
-  , (exception) ->
-    fut.throw(new Error("Exception while getting documents"))
-
-  url = "#{Meteor.settings.apiUrl}/public/publications?fields=html,data,document_id,created_at&space=#{Meteor.settings.space}"
-  Meteor.http.call("GET", url, handler)
+  # listen to all publications from all spaces
+  Meteor.http.call("POST",
+    "#{Meteor.settings.apiUrl}/webhooks/publications/subscribe",
+    data:
+      url: "#{Meteor.settings.url}/publication"
+  , webhookHandler)
+, (exception) ->
+  fut.throw(new Error("Exception while getting documents"))
 
   fut.wait()
 

@@ -56,8 +56,7 @@ tryRenderIFrame = (view) ->
 
 
 Template.ArticleStream.articles = ->
-  articles = _this.Articles.find({}, {sort: {created_at: -1}}).fetch()
-  teaserBuilder = new TeaserBuilder(articles)
+  teaserBuilder = new TeaserBuilder(@articles)
   teasers = teaserBuilder.getTeasers()
   teasers
 

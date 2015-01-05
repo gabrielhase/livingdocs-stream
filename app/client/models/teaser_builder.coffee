@@ -67,8 +67,9 @@ class @TeaserBuilder
       # the link target
       documentId = publication.document_id
       mongoId = publication._id
-      teasers.push {title, teaserImage, documentId, mongoId}
-      title = teaserImage = documentId = mongoId = undefined
+      spaceId = publication.space_id
+      teasers.push {title, teaserImage, documentId, mongoId, spaceId}
+      title = teaserImage = documentId = mongoId = spaceId = undefined
     teasers
 
 

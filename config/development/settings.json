@@ -1,6 +1,6 @@
 {
   "cordova": {},
-  "apiUrl": "http://localhost:9090",
+  "apiUrl": "http://livingdocsapi.pagekite.me",
   "url": "http://livingdocsstream.pagekite.me",
-  "space": "mySpace"
+  "space": "1"
 }
