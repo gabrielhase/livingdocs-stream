@@ -2,6 +2,7 @@ Template.Article.article = ->
   # we set this to the session since we will render in an Iframe
   # asynchronously
   Session.set('articleHtml', @article.html)
+  Session.set('designName', @article.data.design.name)
 
 
 # After render hook -> ensures that the Iframe parent container is present
@@ -32,6 +33,13 @@ addToHead = (iframe, $element) ->
   $(iframe.contentDocument.head).append($element)
 
 
+createHtml = (design, html) ->
+  $html = $(design.wrapper)
+  $docSection = $html.find('.doc-section')
+  $docSection.append(html)
+  $html
+
+
 tryRenderIFrame = (view) ->
   if Session.get('articleHtml')
     iframe = createiFrameTag
@@ -46,26 +54,42 @@ tryRenderIFrame = (view) ->
         'width: 100%;'
       )
 
-      addToHead(iframe, $('<link rel="stylesheet" href="/designs/timeline.css">'))
+      design = getDesign(Session.get('designName'))
+      addToHead(iframe, $("<link rel='stylesheet' href='#{design.css}'>"))
       addToHead(iframe, $('<script src="//use.resrc.it/"></script>'))
 
-      html = """
-      <section class="livingdocs-edit-area">
-        <article class="article-full articlebody fullarticle fullarticle__body doc-section">
-          #{Session.get('articleHtml')}
-        </article>
-      </section>
-      """
-      $(iframe.contentDocument.body).append(html)
+      $html = createHtml(design, Session.get('articleHtml'))
+      $(iframe.contentDocument.body).append($html)
       $images = $(iframe.contentDocument.body).find('.resrc')
       for $image in $images
         resrc.resrc($image)
       # Reset articleHtml session variable
       Session.set('articleHtml', undefined)
     # Append IFrame to the DOM
-    $(view.firstNode).append(iframe)
+    $(view.firstNode).html(iframe)
   else
     setTimeout ->
       tryRenderIFrame(view)
     , 30
+
+
+getDesign = (designName) ->
+  switch designName
+    when 'timeline'
+      css: '/designs/timeline.css'
+      wrapper: """
+        <div>
+          <div class='funky-wrapper doc-section'>
+          </div>
+        </div>
+      """
+    when 'morpheus'
+      css: '/designs/morpheus.css'
+      wrapper: """
+        <section class="livingdocs-edit-area">
+          <article class="article-full articlebody fullarticle fullarticle__body doc-section">
+          </article>
+        </section>
+      """
+
 
