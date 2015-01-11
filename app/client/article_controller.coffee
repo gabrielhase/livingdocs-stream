@@ -1,16 +1,11 @@
-_this = @
-
 class @ArticleController extends RouteController
 
 
   show: ->
-    if @ready()
-      # we set this in the session since the rendering happens in
-      # the rendered callback of the Article template.
-      Session.set('articleId', @params._id)
-      @render('Article')
-    else
-      console.log 'loading'
+    @render 'Article',
+      data: ->
+        article = Articles.find({_id: @params._id}).fetch()[0]
+        article: article
 
 
   index: ->
