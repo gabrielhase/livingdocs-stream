@@ -28,6 +28,10 @@ waitForIFrameLoad = (iframe, cb) ->
     , 30
 
 
+addToHead = (iframe, $element) ->
+  $(iframe.contentDocument.head).append($element)
+
+
 tryRenderIFrame = (view) ->
   if Session.get('articleHtml')
     iframe = createiFrameTag
@@ -41,8 +45,10 @@ tryRenderIFrame = (view) ->
         'height: 100%;' +
         'width: 100%;'
       )
-      $css = $('<link rel="stylesheet" href="/designs/morpheus.css">')
-      $(iframe.contentDocument.head).append($css)
+
+      addToHead(iframe, $('<link rel="stylesheet" href="/designs/timeline.css">'))
+      addToHead(iframe, $('<script src="//use.resrc.it/"></script>'))
+
       html = """
       <section class="livingdocs-edit-area">
         <article class="article-full articlebody fullarticle fullarticle__body doc-section">
