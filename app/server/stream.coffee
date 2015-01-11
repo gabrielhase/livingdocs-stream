@@ -40,9 +40,7 @@ Meteor.startup ->
 
 
 # Server side webhook
-Router.map ->
-  @route 'publication',
-    path: '/publication'
-    where: 'server'
-    action: ->
-      saveArticle(@request.body.publication)
+Router.route '/publication', ->
+  saveArticle(@request.body.publication)
+, where: 'server'
+
