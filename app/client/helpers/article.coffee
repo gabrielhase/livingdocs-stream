@@ -1,3 +1,14 @@
+Template.Article.article = ->
+  # we set this to the session since we will render in an Iframe
+  # asynchronously
+  Session.set('articleHtml', @article.html)
+
+
+# After render hook -> ensures that the Iframe parent container is present
+Template.Article.rendered = ->
+  tryRenderIFrame(this)
+
+
 createiFrameTag = ({ element, width, height }) ->
   iframe = element.ownerDocument.createElement('iframe')
   iframe.src = 'about:blank'
@@ -51,20 +62,4 @@ tryRenderIFrame = (view) ->
     setTimeout ->
       tryRenderIFrame(view)
     , 30
-
-
-Template.ArticleStream.articles = ->
-  teaserBuilder = new TeaserBuilder(@articles)
-  teasers = teaserBuilder.getTeasers()
-  teasers
-
-
-Template.Article.article = ->
-  # we set this to the session since we will render in an Iframe
-  # asynchronously
-  Session.set('articleHtml', @article.html)
-
-
-Template.Article.rendered = ->
-  tryRenderIFrame(this)
 
